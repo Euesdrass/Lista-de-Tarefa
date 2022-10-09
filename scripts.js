@@ -114,3 +114,16 @@ const refreshTasksUsingLocalStorage = () => {
     deleteItem.addEventListener("click", () =>
       handleDeleteClick(taskItemContainer, taskContent)
     );
+
+    taskItemContainer.appendChild(taskContent);
+    taskItemContainer.appendChild(deleteItem);
+
+    tasksContainer.appendChild(taskItemContainer);
+  }
+};
+
+refreshTasksUsingLocalStorage();
+
+addTaskButton.addEventListener("click", () => handleAddTask());
+
+inputElement.addEventListener("change", () => handleInputChange());
