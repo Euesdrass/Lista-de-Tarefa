@@ -1,0 +1,17 @@
+* {
+    margin: 0;
+    padding: 0;
+}
+
+#card-container {
+    display: flex;
+    justify-content: center;
+    background-color: blueviolet;
+}
+
+#card {
+    background-color: aqua;
+    width: 20em;
+    height: 15em;
+    
+}
