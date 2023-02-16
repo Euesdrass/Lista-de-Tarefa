@@ -7,39 +7,19 @@
 #include <ESP8266WiFi.h>
 #define RELAY_PIN_1 D1
 #define RELAY_PIN_2 D2
-#define RELAY_PIN_2 D7
 #endif
 #include "fauxmoESP.h"
-//#include <Espalexa.h>
-//programação do servo
-
-#include <Servo.h>
-int button = 7, pinServo = 8;
-Servo myServo;
-
-//#define SERVO D5
-//Servo s;
-
-//int pos;//posição do servo
 
 #define SERIAL_BAUDRATE 115200
 
-#define WIFI_SSID "HWNET_HOME"
-#define WIFI_PASS "80114079"
-#define led D4
+#define WIFI_SSID "DGF"
+#define WIFI_PASS "0123456789"
+
 #define LAMP_1 "LED 1"
 #define LAMP_2 "LED 2"
-#define LAMP_7 "button"
 
 fauxmoESP fauxmo;
-//Espalexa espAlexa;
-//void Funcion_SERVO(uint8_t brightness);
-void PositServo(int max, int min){
-  int pos = 0;
-(digitalRead(button) == HIGH) ? pos = max : pos = min;
-myServo.write(pos);
-delay(15);
-}
+
 
 // Wi-Fi Conexão
 void wifiSetup() {
@@ -64,14 +44,9 @@ void wifiSetup() {
 
 void setup() {
   // Inicia a Serial
-  //s.attach(SERVO);
   Serial.begin(SERIAL_BAUDRATE);
   Serial.println();
-  //s.write(0);//posição inicial do servo motor
-  pinMode(button, INPUT);    
-  myServo.attach(pinServo);
 
- 
   // Conexão Wi-Fi
   wifiSetup();
 
@@ -81,13 +56,6 @@ void setup() {
 
   pinMode(RELAY_PIN_2, OUTPUT);
   digitalWrite(RELAY_PIN_2, LOW);
-
-  pinMode(button, INPUT);    
-  myServo.attach(pinServo);
-
-
-  //pinMode(SERVO, OUTPUT);
-  //digitalWrite(SERVO, LOW);
 
   // Por padrão, fauxmoESP cria seu próprio servidor web na porta definida
   // A porta TCP deve ser 80 para dispositivos gen3 (o padrão é 1901)
@@ -106,9 +74,6 @@ void setup() {
   // Adiciona os dispositivos
   fauxmo.addDevice(LAMP_1);
   fauxmo.addDevice(LAMP_2);
-  fauxmo.addDevice("LAMP_7");
-//fauxmo.addDevice("garagem", Funcion_SERVO);
-  //espAlexa.addDevice("garagem", Funcion_SERVO);
 
   fauxmo.onSetState([](unsigned char device_id, const char * device_name, bool state, unsigned char value) {
     // Retorno de chamada quando um comando da Alexa é recebido.
@@ -134,15 +99,6 @@ void setup() {
         digitalWrite(RELAY_PIN_2, LOW);
       }
     }
-    //if ( (strcmp(device_name, SERVO) == 0) ) {
-      // this just sets a variable that the main loop() does something about
-    //  Serial.println("RELAY 2 switched by Alexa");
-    //  if (state) {
-    //    digitalWrite(SERVO, HIGH);
-   //   } else {
-    //    digitalWrite(SERVO, LOW);
-   //   }
-  //  }
   });
 
 }
@@ -150,7 +106,6 @@ void setup() {
 void loop() {
   // fauxmoESP usa um servidor TCP assíncrono, mas um servidor UDP sincronizado
   // Portanto, temos que pesquisar manualmente os pacotes UDP
-  PositServo(180, 0);
   fauxmo.handle();
 
   static unsigned long last = millis();
@@ -160,17 +115,3 @@ void loop() {
   }
 
 }
-//void Funcion_SERVO(uint8_t brightness) {
-//  if (brightness) {
-
-//    digitalWrite(led, HIGH);
-//    delay(1000);
- //   digitalWrite(led, LOW);
-//    delay(10);
- //   s.write(150);
- //   delay(3000);
-//    s.write(0);
-//    delay(10);
-
-//  }
-//}
