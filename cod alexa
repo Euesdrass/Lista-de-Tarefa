@@ -18,6 +18,10 @@
 #define LAMP_1 "LED 1"
 #define LAMP_2 "LED 2"
 
+#include <Servo.h>
+
+Servo myservo;
+
 fauxmoESP fauxmo;
 
 
@@ -44,6 +48,9 @@ void wifiSetup() {
 
 void setup() {
   // Inicia a Serial
+
+  myservo.attach(2); 
+  
   Serial.begin(SERIAL_BAUDRATE);
   Serial.println();
 
@@ -107,6 +114,18 @@ void loop() {
   // fauxmoESP usa um servidor TCP assíncrono, mas um servidor UDP sincronizado
   // Portanto, temos que pesquisar manualmente os pacotes UDP
   fauxmo.handle();
+
+  int pos;
+
+  for (pos = 0; pos <= 180; pos += 1) { // goes from 0 degrees to 180 degrees
+    // in steps of 1 degree
+    myservo.write(pos);              // tell servo to go to position in variable 'pos'
+    delay(15);                       // waits 15ms for the servo to reach the position
+  }
+  for (pos = 180; pos >= 0; pos -= 1) { // goes from 180 degrees to 0 degrees
+    myservo.write(pos);              // tell servo to go to position in variable 'pos'
+    delay(15);                       // waits 15ms for the servo to reach the position
+  }
 
   static unsigned long last = millis();
   if (millis() - last > 5000) {
